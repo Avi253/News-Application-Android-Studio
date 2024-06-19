@@ -15,7 +15,7 @@
         android:textSize="30sp"
         android:fontFamily="sans-serif-black"
         android:textStyle="bold"
-        android:textColor="#353231"
+        style="@style/TEXT"
         android:padding="4dp"
         android:id="@+id/app_Title"/>
 

@@ -4,20 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/SCREEN"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Quick News"
-        android:gravity="center"
-        android:layout_marginTop="5dp"
-        android:textSize="30sp"
-        android:fontFamily="sans-serif-black"
-        android:textStyle="bold"
-        android:textColor="#353231"
-        android:id="@+id/app_Title"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Quick News"
+            android:gravity="center"
+            style="@style/TEXT"
+            android:layout_marginTop="5dp"
+            android:textSize="30sp"
+            android:fontFamily="sans-serif-black"
+            android:textStyle="bold"
+            android:id="@+id/app_Title"/>
+        
+        <Switch
+            android:id="@+id/Switcher"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/black"/>
+
+
+    </RelativeLayout>
 
     <HorizontalScrollView
         android:layout_width="match_parent"

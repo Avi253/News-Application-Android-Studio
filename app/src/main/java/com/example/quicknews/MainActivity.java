@@ -1,14 +1,18 @@
 package com.example.quicknews;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.kwabenaberko.newsapilib.NewsApiClient;
@@ -27,11 +31,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     LinearProgressIndicator progressIndicator;
     Button btn1,btn2,btn3,btn4,btn5,btn6,btn7;
     SearchView searchView;
+    Switch switcher;
+    boolean nightMODE;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        switcher = findViewById(R.id.Switcher);
+
+        // we use sharePreferences to save mode if exit the app and go back again
+        sharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE);
+
+        // light mode is the default mode
+        nightMODE = sharedPreferences.getBoolean("night",false);
+
+        if(nightMODE){
+            switcher.setChecked(true);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+
+        switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(nightMODE){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    editor = sharedPreferences.edit();
+                    editor.putBoolean("night",false);
+                }else{
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    editor = sharedPreferences.edit();
+                    editor.putBoolean("night",true);
+                }
+                editor.apply();
+            }
+        });
 
         recyclerView = findViewById(R.id.news_recycler_view);
         progressIndicator = findViewById(R.id.progress_bar);
@@ -43,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn5 = findViewById(R.id.btn_5);
         btn6 = findViewById(R.id.btn_6);
         btn7 = findViewById(R.id.btn_7);
+
 
         btn1.setOnClickListener(this);
         btn2.setOnClickListener(this);
