@@ -6,8 +6,12 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +29,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    BroadcastReceiver broadcastReceiver;
     RecyclerView recyclerView;
     List<Article> articleList = new ArrayList<>();
     NewsRecyclerAdapter adapter;
@@ -41,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        broadcastReceiver = new ConnectionReceiver();
+        registerNetworkBroadcast();
 
         switcher = findViewById(R.id.Switcher);
 
@@ -107,6 +115,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setupRecyclerView();
         getNews("GENERAL",null);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        registerNetworkBroadcast();
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        unregisterNetwork();
+    }
+
+    protected void registerNetworkBroadcast(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+    }
+
+    protected void unregisterNetwork(){
+        try{
+            unregisterReceiver(broadcastReceiver);
+        }catch(IllegalArgumentException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterNetwork();
     }
 
     void changeInProgress(boolean show){
